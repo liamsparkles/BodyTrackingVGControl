@@ -16,26 +16,26 @@ mpPose = mp.solutions.pose
 pose = mpPose.Pose()
 mpDraw = mp.solutions.drawing_utils
 
-#cap = cv2.VideoCapture(0)
-cap = cv2.VideoCapture('videos/a.mp4')
+cap = cv2.VideoCapture(0)
+#cap = cv2.VideoCapture('videos/a.mp4')
 pTime = 0
 
-with open('testfile.txt', 'w') as f:
+with open('testfile.csv', 'w') as f:
     iter_num = 0
     while True:
         success, img = cap.read()
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         results = pose.process(imgRGB)
         #print(results.pose_landmarks)
-        for landmark in results.pose_landmarks.landmark:
-            parsed_vals = parselandmarkvalues(landmark)
-            f.write(str(iter_num) + ","
-                    + str(parsed_vals[0]) + ","
-                    + str(parsed_vals[1]) + ","
-                    + str(parsed_vals[2]) + ","
-                    + str(parsed_vals[3]) + "\n")
-        iter_num += 1
         if results.pose_landmarks:
+            for landmark in results.pose_landmarks.landmark:
+                parsed_vals = parselandmarkvalues(landmark)
+                f.write(str(iter_num) + ","
+                        + str(parsed_vals[0]) + ","
+                        + str(parsed_vals[1]) + ","
+                        + str(parsed_vals[2]) + ","
+                        + str(parsed_vals[3]) + "\n")
+            iter_num += 1
             mpDraw.draw_landmarks(img, results.pose_landmarks, mpPose.POSE_CONNECTIONS)
             for iid, lm in enumerate(results.pose_landmarks.landmark):
                 h, w, c = img.shape  # height, width and c?
@@ -48,4 +48,4 @@ with open('testfile.txt', 'w') as f:
         pTime = cTime
         cv2.putText(img, str(int(fps)), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 3)
         cv2.imshow("Image", img)
-        cv2.waitKey(1000)
+        cv2.waitKey(1)

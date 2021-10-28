@@ -1,0 +1,86 @@
+
+Movement options
+
+- Left, Right, Jump, Duck
+
+
+Create a 3x3 grid which controls the amount we move
+
+for example: for going left, we could have
+0 0 x
+0 0 x
+0 0 x
+
+or 
+
+0 x x
+0 x x
+0 x x
+
+Where we need to dodge the xs here, so either we can just stay in the centre (one x) or actually left (two xs)
+
+This can also be applied for right. For jumping, we only want a single jump or duck level.
+Jump
+0 0 0
+0 0 0
+x x x
+
+or Duck
+x x x
+0 0 0
+0 0 0
+
+As it progresses, it gets faster, for the demo
+L = centre left
+LL = really left
+R = centre right
+RR = really right
+D = duck
+J = jump
+
+
+LL
+R
+RR
+D
+J
+L
+
+speed up
+
+RR
+D
+J
+L
+RR
+J
+J
+D
+LL
+RR
+
+speed up
+
+RR
+RR
+LL
+LL
+R
+L
+J
+D
+RR
+J
+LL
+D
+
+Done
+
+
+For expansion, mulitple of these movements can be done together, an instead of just having to perform one actiion based on objects coming towards you, we can force holding an action (floor disappears), and perform other actiions during that.
+
+For exmaple
+
+RRJ
+Would require you to go to the right, then jump
+

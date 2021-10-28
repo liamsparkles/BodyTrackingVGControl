@@ -77,7 +77,7 @@ D
 Done
 
 
-For expansion, mulitple of these movements can be done together, an instead of just having to perform one actiion based on objects coming towards you, we can force holding an action (floor disappears), and perform other actiions during that.
+For expansion, mulitple of these movements can be done together, an instead of just having to perform one actiion based on objects coming towards you, we can force holding an action (floor disappears), and perform other actiions during that. We can also require the grabbing of items, and use of those items for pushing things or something like that.
 
 For exmaple
 

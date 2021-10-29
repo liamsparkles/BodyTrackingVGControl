@@ -2,7 +2,12 @@ import cv2
 import mediapipe as mp
 import time
 import numpy as np
+import socket
+import time
 
+host, port = "127.0.0.1", 25001
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.connect((host, port))
 
 def parselandmarkvalues(landmark):
     landmark_vals = str(landmark).strip("\n").split("\n")
@@ -28,8 +33,11 @@ with open('testfile.csv', 'w') as f:
         results = pose.process(imgRGB)
         #print(results.pose_landmarks)
         if results.pose_landmarks:
-            for landmark in results.pose_landmarks.landmark:
+            for i, landmark in enumerate(results.pose_landmarks.landmark):
                 parsed_vals = parselandmarkvalues(landmark)
+                a = [i+1]  # position number (1 - 33)
+                a.extend(parsed_vals)
+                sendData(a)
                 f.write(str(iter_num) + ","
                         + str(parsed_vals[0]) + ","
                         + str(parsed_vals[1]) + ","
@@ -49,3 +57,10 @@ with open('testfile.csv', 'w') as f:
         cv2.putText(img, str(int(fps)), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 3)
         cv2.imshow("Image", img)
         cv2.waitKey(1)
+
+def sendData(position):
+    posString = ','.join(map(str, position)) #Converting Vector5 to a string
+    # values are (positionIndex, x, y, z, visibility)
+    print(posString)
+    sock.sendall(posString.encode("UTF-8")) #Converting string to Byte, and sending it to C#
+

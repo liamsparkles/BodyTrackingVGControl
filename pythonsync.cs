@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using UnityEngine;
+//using UnityEngine;
 using System.Threading;
 
 public class pythonsync : MonoBehaviour
@@ -58,12 +58,13 @@ public class pythonsync : MonoBehaviour
         if (dataReceived != null)
         {
             //---Using received data---
-            receivedPos = StringToVector3(dataReceived); //<-- assigning receivedPos value from Python
+            //receivedPos = StringToVector3(dataReceived); //<-- assigning receivedPos value from Python
+	    print(dataReceived);
             print("received pos data, and moved the Cube!");
 
             //---Sending Data to Host----
-            byte[] myWriteBuffer = Encoding.ASCII.GetBytes("Hey I got your message Python! Do You see this massage?"); //Converting string to byte data
-            nwStream.Write(myWriteBuffer, 0, myWriteBuffer.Length); //Sending the data in Bytes to Python
+            //byte[] myWriteBuffer = Encoding.ASCII.GetBytes("Hey I got your message Python! Do You see this massage?"); //Converting string to byte data
+            //nwStream.Write(myWriteBuffer, 0, myWriteBuffer.Length); //Sending the data in Bytes to Python
         }
     }
 

@@ -16,8 +16,8 @@ mpPose = mp.solutions.pose
 pose = mpPose.Pose()
 mpDraw = mp.solutions.drawing_utils
 
-cap = cv2.VideoCapture(0)
-#cap = cv2.VideoCapture('videos/a.mp4')
+#cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture('videos/a.mp4')
 pTime = 0
 
 with open('testfile.csv', 'w') as f:

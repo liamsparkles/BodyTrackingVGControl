@@ -1,20 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
+using UnityEngine;
+using System;
+using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using UnityEngine;
 using System.Threading;
-using System;
-using System.Globalization;
 
-int NUMLANDMARKS = 33;
 
 public class poseDetectionSocket : MonoBehaviour
 {
+    public const int NUMLANDMARKS = 33;
     Thread mThread;
     public string connectionIP = "127.0.0.1";
-    public int connectionPort = 25002;
+    public int connectionPort = 25001;
     IPAddress localAdd;
     TcpListener listener;
     TcpClient client;
@@ -22,14 +20,28 @@ public class poseDetectionSocket : MonoBehaviour
     bool running;
     private void Update()
     {
-        transform.position = receivedPos; //assigning receivedPos in SendAndReceiveData()
+        //Landmark positions 
+        //Left hand 16 18 20 22
+        //Right hand 15 17 19 21
+        Vector4[] lefthandpositions = new Vector4[] {receivedPositions[16], receivedPositions[18], receivedPositions[20], receivedPositions[22]};
+        Vector4[] righthandpositions = new Vector4[] {receivedPositions[15], receivedPositions[17], receivedPositions[19], receivedPositions[21]};
+
+        Vector3 avgleft = averageVector4(lefthandpositions);
+        Vector3 avgright = averageVector4(righthandpositions);
+        //print("Left is");
+        print(avgleft);
+        //print("right is");
+        //print(avgright);
+        transform.position = avgleft;
     }
+
     private void Start()
     {
         ThreadStart ts = new ThreadStart(GetInfo);
         mThread = new Thread(ts);
         mThread.Start();
     }
+
     void GetInfo()
     {
         localAdd = IPAddress.Parse(connectionIP);
@@ -57,9 +69,7 @@ public class poseDetectionSocket : MonoBehaviour
         if (dataReceived != null)
         {
             //---Using received data---
-            receivedPos = StringToVector4Array(dataReceived); //<-- assigning receivedPos value from Python
-            print("received pos data, and moved the Cube!");
-
+            StringToVector4Array(dataReceived); //<-- assigning receivedPos value from Python
             //---Sending Data to Host----
             byte[] myWriteBuffer = Encoding.ASCII.GetBytes("Hey I got your message Python! Do You see this massage?"); //Converting string to byte data
             nwStream.Write(myWriteBuffer, 0, myWriteBuffer.Length); //Sending the data in Bytes to Python
@@ -72,36 +82,58 @@ public class poseDetectionSocket : MonoBehaviour
         {
             sVector = sVector.Substring(1, sVector.Length - 2);
         }
-	else
-	{
-	    print("Something went wrong")	
-	}
+        else
+        {
+            print("Something went wrong");
+        }
         // split the items
         string[] posArray = sVector.Split('|');
-        int numlandmarkPositions = posArray.Length;
-	Debug.assert(numlandmarkPositions == NUMLANDMARKS);
-        float x=0,y=0,z=0,v=0;
-        for(int i=0;i<numPositions;i++){
-            print(posArray[i]);
-            string[] positions = posArray[i].Split(',');
-	    if (positions.StartsWith("(") && positions.EndsWith(")"))
-	    {
-		positions = positions.Substring(1, sVector.Length - 2);
-	    }
-	    else
-	    {
-		print("Something went wrong")	
-	    }
-	
-            try{
+        int numLandmarkPositions = posArray.Length;
+        //Debug.assert(numlandmarkPositions == NUMLANDMARKS);
+        float x = 0, y = 0, z = 0, v = 0;
+        for (int i = 0; i < numLandmarkPositions; i++)
+        {
+            string curLandmark = posArray[i];
+            if (curLandmark.StartsWith("(") && curLandmark.EndsWith(")"))
+            {
+                curLandmark = curLandmark.Substring(1, curLandmark.Length - 2);
+            }
+            else
+            {
+                print("Something went wrong");
+            }
+            string[] positions = curLandmark.Split(',');
+            try
+            {
                 x = float.Parse(positions[0], CultureInfo.InvariantCulture);
                 y = float.Parse(positions[1], CultureInfo.InvariantCulture);
                 z = float.Parse(positions[2], CultureInfo.InvariantCulture);
-		v = float.Parse(positions[3], CultureInfo.InvariantCulture);
-		receivedPositions[i] = new Vector4(x,y,z,v); // Store the data
-            }catch(Exception e){
+                v = float.Parse(positions[3], CultureInfo.InvariantCulture);
+                receivedPositions[i] = new Vector4(x, y, z, v); // Store the data
+            }
+            catch (Exception e)
+            {
                 print(e);
             }
         }
+    }
+
+    Vector3 averageVector4(Vector4[] myVectors)
+    {
+        print(myVectors);
+        Vector3 avgVec = new Vector3(0, 0, 0);
+        for (int i = 0; i < myVectors.Length; i++)
+        {
+            avgVec.x += myVectors[i].x;
+            avgVec.y += myVectors[i].y;
+            avgVec.z += myVectors[i].z;
+        }
+        //avgVec.x /= myVectors.Length;
+        //avgVec.y /= myVectors.Length;
+        //avgVec.z /= myVectors.Length;
+        avgVec.x *= -1;
+        avgVec.y *= -1;
+        avgVec.z *= -1;
+        return avgVec;
     }
 }

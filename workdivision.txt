@@ -1,0 +1,19 @@
+
+Abhishek
+	- Main scenery and track
+
+Liam
+	- Obstacles
+	- Standard game + Random
+	- Textures glowy things
+
+Kritu
+	- Menu and UI interaction (including calibration)
+		- Standard mode 
+		- Endless mode
+		- Options (if time)
+		- Exit
+	- If time deal with pausing and resuming
+		- both hands pause game
+
+

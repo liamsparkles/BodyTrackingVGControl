@@ -1,10 +1,7 @@
 using UnityEngine;
 public class dynamicTest : MonoBehaviour
 {
-    private Vector3[] leftpos = new Vector3[6];
-    private Vector3[] rightpos = new Vector3[6];
-    private Vector3[] uppos = new Vector3[3];
-    private Vector3[] downpos = new Vector3[3];
+    private Obstacle[] obstacles = new Obstacle[6];
 
     // Instantiates prefabs in a circle formation
     public GameObject prefab;
@@ -15,33 +12,15 @@ public class dynamicTest : MonoBehaviour
 
     void Start()
     {
-        leftpos[0] = transform.position + new Vector3(0, 2, dist);
-        leftpos[1] = transform.position + new Vector3(0, 1, dist);
-        leftpos[2] = transform.position + new Vector3(0, 0, dist);
-        leftpos[3] = transform.position + new Vector3(1, 2, dist);
-        leftpos[4] = transform.position + new Vector3(1, 1, dist);
-        leftpos[5] = transform.position + new Vector3(1, 0, dist);
-        rightpos[0] = transform.position + new Vector3(0, 2, dist);
-        rightpos[1] = transform.position + new Vector3(0, 1, dist);
-        rightpos[2] = transform.position + new Vector3(0, 0, dist);
-        rightpos[3] = transform.position + new Vector3(-1, 2, dist);
-        rightpos[4] = transform.position + new Vector3(-1, 1, dist);
-        rightpos[5] = transform.position + new Vector3(-1, 0, dist);
-        uppos[0] = transform.position + new Vector3(-1, 0, dist);
-        uppos[1] = transform.position + new Vector3(0, 0, dist);
-        uppos[2] = transform.position + new Vector3(1, 0, dist);
-        downpos[0] = transform.position + new Vector3(-1, 2, dist);
-        downpos[1] = transform.position + new Vector3(0, 2, dist);
-        downpos[2] = transform.position + new Vector3(1, 2, dist);
+        Vector3 offset = transform.position + new Vector3(0, 0, dist);
+        obstacles[0] = new ObstacleLeft(offset);
+        obstacles[1] = new ObstacleVLeft(offset);
+        obstacles[2] = new ObstacleRight(offset);
+        obstacles[3] = new ObstacleVRight(offset);
+        obstacles[4] = new ObstacleDown(offset);
+        obstacles[5] = new ObstacleUp(offset);
 
         newBlockTime = 0;
-        //curState = 0;
-        //float angle = i * Mathf.PI * 2 / numberOfObjects;
-        //float x = Mathf.Cos(angle) * radius;
-        //float z = Mathf.Sin(angle) * radius;
-        //float x = 0;
-        //float y = 0;
-        //float z = 0;
         //Vector3 pos = transform.position + new Vector3(x, y, z);
 
         //For the move left obstacle
@@ -53,15 +32,10 @@ public class dynamicTest : MonoBehaviour
     {
         Vector3[] curPos;
         newBlockTime -= Time.deltaTime;
-        //int prevState = curState;
-        int rInt = (int)Random.Range(0, 3.9f);
+        int rInt = (int)Random.Range(0, obstacles.Length - 0.001f);
         if (newBlockTime <= 0)
         {
-            if (rInt == 0) curPos = leftpos;
-            else if (rInt == 1) curPos = rightpos;
-            else if (rInt == 2) curPos = uppos;
-            else if (rInt == 3) curPos = downpos;
-            else curPos = leftpos;
+            curPos = obstacles[rInt].positions;
 
             for (int i = 0; i < curPos.Length; i++)
             {
@@ -69,5 +43,82 @@ public class dynamicTest : MonoBehaviour
             }
             newBlockTime = newBlockCreationDelay;
         }
+    }
+}
+
+abstract class Obstacle 
+{
+    public Vector3[] positions;
+}
+
+class ObstacleRight : Obstacle
+{
+    public ObstacleRight(Vector3 offset)
+    {
+        positions = new Vector3[3];
+        positions[0] = offset + new Vector3(1, 2, 0);
+        positions[1] = offset + new Vector3(1, 1, 0);
+        positions[2] = offset + new Vector3(1, 0, 0);
+    }
+}
+
+class ObstacleVRight : Obstacle
+{
+    public ObstacleVRight(Vector3 offset)
+    {
+        positions = new Vector3[6];
+        positions[0] = offset + new Vector3(0, 2, 0);
+        positions[1] = offset + new Vector3(0, 1, 0);
+        positions[2] = offset + new Vector3(0, 0, 0);
+        positions[3] = offset + new Vector3(1, 2, 0);
+        positions[4] = offset + new Vector3(1, 1, 0);
+        positions[5] = offset + new Vector3(1, 0, 0);
+    }
+}
+
+class ObstacleLeft : Obstacle
+{
+    public ObstacleLeft(Vector3 offset)
+    {
+        positions = new Vector3[3];
+        positions[0] = offset + new Vector3(-1, 2, 0);
+        positions[1] = offset + new Vector3(-1, 1, 0);
+        positions[2] = offset + new Vector3(-1, 0, 0);
+    }
+}
+
+class ObstacleVLeft : Obstacle
+{
+    public ObstacleVLeft(Vector3 offset)
+    {
+        positions = new Vector3[6];
+        positions[0] = offset + new Vector3(0, 2, 0);
+        positions[1] = offset + new Vector3(0, 1, 0);
+        positions[2] = offset + new Vector3(0, 0, 0);
+        positions[3] = offset + new Vector3(-1, 2, 0);
+        positions[4] = offset + new Vector3(-1, 1, 0);
+        positions[5] = offset + new Vector3(-1, 0, 0);
+    }
+}
+
+class ObstacleDown : Obstacle
+{
+    public ObstacleDown(Vector3 offset)
+    {
+        positions = new Vector3[3];
+        positions[0] = offset + new Vector3(-1, 0, 0);
+        positions[1] = offset + new Vector3(0, 0, 0);
+        positions[2] = offset + new Vector3(1, 0, 0);
+    }
+}
+
+class ObstacleUp : Obstacle
+{
+    public ObstacleUp(Vector3 offset)
+    {
+        positions = new Vector3[3];
+        positions[0] = offset + new Vector3(-1, 2, 0);
+        positions[1] = offset + new Vector3(0, 2, 0);
+        positions[2] = offset + new Vector3(1, 2, 0);
     }
 }

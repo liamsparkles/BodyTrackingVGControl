@@ -18,6 +18,8 @@ public class poseDetectionSocket : MonoBehaviour
     TcpClient client;
     Vector4[] receivedPositions = new Vector4[NUMLANDMARKS];
     bool running;
+    private int count = 0;
+
     private void Update()
     {
         //Landmark positions 
@@ -48,11 +50,12 @@ public class poseDetectionSocket : MonoBehaviour
         listener = new TcpListener(IPAddress.Any, connectionPort);
         listener.Start();
 
-        client = listener.AcceptTcpClient();
+        //client = listener.AcceptTcpClient();
 
         running = true;
         while (running)
         {
+            client = listener.AcceptTcpClient();
             SendAndReceiveData();
         }
         listener.Stop();
@@ -71,7 +74,7 @@ public class poseDetectionSocket : MonoBehaviour
             //---Using received data---
             StringToVector4Array(dataReceived); //<-- assigning receivedPos value from Python
             //---Sending Data to Host----
-            byte[] myWriteBuffer = Encoding.ASCII.GetBytes("Hey I got your message Python! Do You see this massage?"); //Converting string to byte data
+            byte[] myWriteBuffer = Encoding.ASCII.GetBytes("Hey I got your message Python! Do You see this massage?" + count++); //Converting string to byte data
             nwStream.Write(myWriteBuffer, 0, myWriteBuffer.Length); //Sending the data in Bytes to Python
         }
     }

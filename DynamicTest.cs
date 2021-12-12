@@ -4,19 +4,22 @@ public class DynamicTest : MonoBehaviour
     private Obstacle[] obstacles = new Obstacle[6];
 
     // Instantiates prefabs in a circle formation
+    public float DEFAULTCREATIONDELAY = 4;
+    public float DEFAULTOBSTACLESPEED = 2;
+
     private double newBlockTime;
-    public float newBlockCreationDelay = 5;
+    public float newBlockCreationDelay;
     public GameObject prefabGeneral;
     public GameObject prefabJump;
     //private int curState;
     public float dist = 20;
-    Modes gameMode = Modes.Endless;
+    public Modes gameMode = Modes.Waiting;
     private int[] standardGame;
     private int curObstacle;
-    public float obstacleSpeed = 10f;
+    public float obstacleSpeed;
     private float relMaxSpeed;
     private float relNewBlock;
-    Points myPoints;
+    public float offsety;
 
     void Start()
     {
@@ -38,15 +41,11 @@ public class DynamicTest : MonoBehaviour
         };
         curObstacle = 0;
 
-        myPoints = GameObject.Find("Points").GetComponent<Points>();
-
+	obstacleSpeed = DEFAULTOBSTACLESPEED;
+	newBLockCreationDelay = DEFAULTCREATIONDELAY;
         relMaxSpeed = obstacleSpeed * 0.1f;
         relNewBlock = 0.025f;
-        //Vector3 pos = transform.position + new Vector3(x, y, z);
-
         //For the move left obstacle
-
-        //Quaternion rot = Quaternion.Euler(0, 0, 0);
     }
 
     void Update()
@@ -54,6 +53,7 @@ public class DynamicTest : MonoBehaviour
         newBlockTime -= Time.deltaTime;
         if (newBlockTime <= 0)
         {
+	    newBlockTime = newBlockCreationDelay;
             Obstacle myObst;
             if (gameMode == Modes.Standard)
             {
@@ -73,10 +73,14 @@ public class DynamicTest : MonoBehaviour
             { 
                 myObst = endlessMode();
             }
-            else
+            else if (gameMode == Modes.Waiting)
+	    {
+		return;
+	    }
+	    else
             {
-                myObst = obstacles[0];
                 print("error");
+		return;
             }
 
             for (int i = 0; i < myObst.positions.Length; i++)
@@ -110,12 +114,20 @@ public class DynamicTest : MonoBehaviour
         print(newBlockCreationDelay);
         print(obstacleSpeed);
     }
+
+    public void ResetSpeeds()
+    {
+	    obstacleSpeed = DEFAULTOBSTACLESPEED;
+	    newBlockCreationDelay = DEFAULTCREATIONDELAY;
+	    curObstacle = 0;
+    }
 }
 
-enum Modes
+public enum Modes
 {
     Endless,
-    Standard
+    Standard,
+    Waiting
 }
 
 abstract class Obstacle 

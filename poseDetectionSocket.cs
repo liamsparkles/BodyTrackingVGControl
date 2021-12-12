@@ -41,10 +41,13 @@ public class poseDetectionSocket : MonoBehaviour
     public float yoffset;
     public bool calibrate = false;
     //private float calibrationTime = 10;
+    public bool CalibratedAlready=false;
 
     public GameObject Canvas;
     public GameObject Score;
     public GameObject DeathText;
+
+    public TextMeshProUGUI CalibrateText;
 
     Points myPoints;
 
@@ -189,6 +192,11 @@ public class poseDetectionSocket : MonoBehaviour
           Calibration(avgLeftLeg, avgRightLeg, avgBody);
         }
 
+        if (CalibratedAlready)
+        {
+            CalibrateText.enabled = false;
+        }
+
         if (pStatus == PlayerStatus.Dead)
         {
             DeathText.SetActive(true);
@@ -214,6 +222,7 @@ public class poseDetectionSocket : MonoBehaviour
             //print("Calibrating");            
             yoffset = -(leftleg.y + rightleg.y) / 2;
             xoffset = -body.x;
+            CalibratedAlready = true;
         
     }
 

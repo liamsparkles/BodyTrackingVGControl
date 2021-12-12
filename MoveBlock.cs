@@ -13,12 +13,13 @@ public class MoveBlock : MonoBehaviour
     {
         myPoints = GameObject.Find("Score").GetComponent<Points>();
         myObstacles = GameObject.Find("ObstacleGeneration").GetComponent<DynamicTest>();
-        myPose = GameObject.Find("Main COntroller").GetComponent<poseDetectionSocket>();
+        myPose = GameObject.Find("Main Controller").GetComponent<poseDetectionSocket>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        print(myPose.ToString());
         if (myPose.getDeath())
         {
             Destroy(gameObject);

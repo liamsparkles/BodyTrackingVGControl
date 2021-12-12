@@ -19,3 +19,9 @@ visibility: A value in [0.0, 1.0] indicating the probability of the landmark bei
 https://blog.tensorflow.org/2021/08/3d-pose-detection-with-mediapipe-blazepose-ghum-tfjs.html
 https://google.github.io/mediapipe/solutions/pose.html
 https://medium.com/axinc-ai/blazepose-a-3d-pose-estimation-model-d8689d06b7c4
+
+Syed Abdul Gaffar Shakhadri (Pose Detection Open Source)
+https://www.analyticsvidhya.com/blog/2021/05/pose-estimation-using-opencv/
+
+Communication between Python and Unity Open Source
+https://github.com/CanYouCatchMe01/CSharp-and-Python-continuous-communication

@@ -1,0 +1,21 @@
+Uses a two-step detector-tracker ML pipeline
+
+Detector: Locates the person/pose region-of-interest (ROI) within the frame
+Tracker: Predicts the pose landmarks and segmentation mask within the ROI-cropped frame.
+
+Alignment mode (Inspired by BlazeFace model used in MediaPipe Face Detection, predicts midpoint of a person's hips, radius of circle and the incline angle of line connecting the shoulder and hip midpoints.
+During video, detector is only invoked on first frame and when the body is no longer present, otherwise derive ROI from previous frame pose landmarks with some room for error
+Optionally, you can choose to invoke the detector each frame
+
+Given 2D image can result in multiple 3D poses, to reduce the ambiguity, annotators provided depth order betweeen pose skeleton edges
+Performance 
+
+x and y: These landmark coordinates normalized to [0.0, 1.0] by the image width and height respectively.
+
+z: This represents the landmark depth by keeping the depth at the midpoint of hips as the origin, and the smaller the value of z, the closer the landmark is to the camera. The magnitude of z uses almost the same scale as x.
+visibility: A value in [0.0, 1.0] indicating the probability of the landmark being visible in the image.
+
+
+https://blog.tensorflow.org/2021/08/3d-pose-detection-with-mediapipe-blazepose-ghum-tfjs.html
+https://google.github.io/mediapipe/solutions/pose.html
+https://medium.com/axinc-ai/blazepose-a-3d-pose-estimation-model-d8689d06b7c4
